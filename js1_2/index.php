@@ -1,0 +1,58 @@
+<?php ?>
+<script>
+class Person {
+  constructor(name,fname,year) {
+    this.name = name;
+    this.fname = fname;
+    this.year = year;
+
+    this.getFullName = () => {
+    return [this.name,this.fname];
+     }
+
+     this.addYear = (number) => {
+      let year = this.year + number;
+      this.year = year;
+    return [year,this.year];
+  }
+  }
+
+
+
+}
+data = ['Вася','Пупкин',2015];
+chelik = new Person(...data);
+
+[name,fname] = chelik.getFullName();
+
+console.log(`Имя ${name} Фамилия ${fname}`);
+
+getObjectInfo = (object) => { 
+    
+    let countField=0,countMethod=0, fields =[], methods=[];
+    
+        for (var key in object) 
+        {
+            if(typeof object[key] === 'function')
+            {
+                countMethod++;
+
+                methods.push(key);
+            }
+            else
+            {
+                countField++;
+
+                fields.push(key);
+            }
+        }
+
+        return [countField,countMethod, fields, methods];
+    };
+
+    [cntf,cntm,f,m] = getObjectInfo(chelik);
+
+    console.log(`Количество полей ${cntf} Количество методов ${cntm}`);
+    console.log('Поля:'+f);
+    console.log('Методы:'+m);
+</script>
