@@ -132,45 +132,22 @@ let contentBlock =
 
 let api = 
 {
-	query:(query, callback) =>
+	query:async (query, callback) =>
 	{
 		let url = 'http://www.omdbapi.com/?s=' + encodeURI(query.toLowerCase()) + '&apikey=d5677312';
+		
+		try
+		{
+			let response = await fetch(url);
+		
+			let data = await response.json();
 
-		let promise = new Promise
-		(
-			(resolve, reject) =>
-			{
-			    let request = new XMLHttpRequest();
-			    
-			    request.open('GET', url);
-
-			    request.onload = () => 
-			    {
-			    	if (request.status === 200) 
-			    	{
-			        	resolve(request.response);
-			      	} 
-			      	else 
-			    	{
-			        	reject('Ошибка сервера. Код ошибки:' + request.statusText);
-			      	}
-			    }
-			    
-			    request.send();				
-			}
-		);
-
-		promise.then
-		(
-			result => 
-			{
-				callback(JSON.parse(result));
-			},
-			error => 
-			{
-				callback(null, text);
-			}
-		);
+			callback(data);
+		}
+		catch(e)
+		{
+			callback(null, 'Ошибка сервера');
+		}
 	}
 };
 
