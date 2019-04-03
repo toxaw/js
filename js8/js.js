@@ -1,3 +1,76 @@
+let filmId;
+
+let elementObject;
+
+let listener = function(e)
+{
+	let elementId = filmId;
+
+	if(!storageAPI.isInStorage(elementId))
+	{
+		storageAPI.addInStorage(elementId);
+	}
+	else
+	{	
+		storageAPI.removeInStorage(elementId);
+	}
+
+	let className = 'fa fa-star' + (!storageAPI.isInStorage(elementId)?'-o':'') + ' icon';
+
+	this.className = className;
+
+	elementObject.className = className;
+};
+
+document.getElementById('modal').getElementsByTagName('span')[0].addEventListener('mousedown', listener);
+
+let storageAPI = 
+{
+	addInStorage:(item) =>
+	{
+		let json = JSON.parse(window.localStorage.choses);
+
+		json[Object.keys(json).length] = item;
+
+		window.localStorage.choses = JSON.stringify(json);
+	},
+	isInStorage:(id) =>
+	{
+		if(!window.localStorage.choses)
+		{
+			return false;
+		}
+
+		let json = JSON.parse(window.localStorage.choses);
+
+		for (prop in json)
+		{
+			if(json[prop]==id)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	},
+	removeInStorage:(id) =>
+	{
+		let json = JSON.parse(window.localStorage.choses);
+
+		let newJson = [];
+
+		for (prop in json)
+		{
+			if(json[prop]!=id)
+			{
+				newJson.push(json[prop]);
+			}
+		}
+
+		window.localStorage.choses = JSON.stringify(newJson);
+	}
+};
+
 let searchBlock = 
 {
 	findEvent : (callback) =>
@@ -93,52 +166,6 @@ let contentBlock =
 
 		let contentField = document.getElementsByTagName('main')[0];
 
-		let addInStorage = (item) =>
-		{
-			let json = JSON.parse(window.localStorage.choses);
-
-			json[Object.keys(json).length] = item;
-
-			window.localStorage.choses = JSON.stringify(json);
-		};
-
-		let isInStorage = (id) =>
-		{
-			if(!window.localStorage.choses)
-			{
-				return false;
-			}
-
-			let json = JSON.parse(window.localStorage.choses);
-
-			for (prop in json)
-			{
-				if(json[prop]==id)
-				{
-					return true;
-				}
-			}
-
-			return false;
-		};
-
-		let removeInStorage = (id) =>
-		{
-			let json = JSON.parse(window.localStorage.choses);
-
-			let newJson = [];
-
-			for (prop in json)
-			{
-				if(json[prop]!=id)
-				{
-					newJson.push(json[prop]);
-				}
-			}
-
-			window.localStorage.choses = JSON.stringify(newJson);
-		};
-
 		contentList.forEach
 		(
 			function(element) 
@@ -151,23 +178,23 @@ let contentBlock =
 
 				choseElement = document.createElement('span');
 
-				choseElement.className = 'fa fa-star' + (!isInStorage(element.id)?'-o':'') + ' icon';
+				choseElement.className = 'fa fa-star' + (!storageAPI.isInStorage(element.id)?'-o':'') + ' icon';
 
 				choseElement.addEventListener('mousedown',
 					function(e)
 					{
 						let elementId = this.closest('.film-element').getAttribute('id');
 
-						if(!isInStorage(element.id))
+						if(!storageAPI.isInStorage(elementId))
 						{
-							addInStorage(elementId);
+							storageAPI.addInStorage(elementId);
 						}
 						else
 						{	
-							removeInStorage(elementId);
+							storageAPI.removeInStorage(elementId);
 						}
 
-						this.className = 'fa fa-star' + (!isInStorage(elementId)?'-o':'') + ' icon';
+						this.className = 'fa fa-star' + (!storageAPI.isInStorage(elementId)?'-o':'') + ' icon';
 					}
 				);
 
@@ -190,7 +217,7 @@ let contentBlock =
 					{
 						let elementId = this.closest('.film-element').getAttribute('id');
 
-						modalEvent(elementId);
+						modalEvent(elementId, this.closest('.film-element').getElementsByTagName('span')[0]);
 					}
 				);
 
@@ -252,17 +279,22 @@ let api =
 };
 
 document.getElementById('modal').addEventListener('mousedown',
-	function ()
+	function (e)
 	{
-		this.style.display = 'none';
+		if(e.target.localName!='span')
+		{
+			this.style.display = 'none';
+		}
 	}
 );
 
-let modalEvent = (id) =>
+let modalEvent = (id, element) =>
 {
 	api.detail(id,
 		(data, text = '') =>
 		{
+			elementObject = element;
+
 			document.getElementById('modal').style.display = 'block';
 
 			let modal = document.getElementById('modal');
@@ -270,6 +302,10 @@ let modalEvent = (id) =>
 			let properties = modal.getElementsByTagName('p');
 
 			modal.getElementsByTagName('img')[0].src = (data['Poster'] && data.Poster!='N/A')?data.Poster:'image/not_found.jpg';
+
+			modal.getElementsByTagName('span')[0].className = 'fa fa-star' + (!storageAPI.isInStorage(data.imdbID.trim())?'-o':'') + ' icon';
+
+			filmId = data.imdbID.trim();
 
 			let setParam = (objectp, value) =>
 			{
@@ -289,8 +325,7 @@ let modalEvent = (id) =>
 			setParam(properties[5], data.imdbRating);
 		}
 	);
-}
-;
+};
 
 searchBlock.findEvent
 (

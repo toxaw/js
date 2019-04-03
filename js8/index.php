@@ -9,6 +9,7 @@
 	<div id="modal">
 		<div id="film-detail">
 			<img src="">
+			<span class="fa fa-star-o icon"></span>
 			<p><b>Название: </b><span></span></p>
 			<p><b>Дата выхода: </b><span></span></p>
 			<p><b>Сюжет: </b><span></span></p>
