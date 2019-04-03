@@ -234,7 +234,7 @@ let api =
 	},
 	detail:async (query, callback) =>
 	{
-		let url = 'http://www.omdbapi.com/?i=' + encodeURI(query.toLowerCase()) + '&apikey=d5677312';
+		let url = 'http://www.omdbapi.com/?i=' + encodeURI(query) + '&apikey=d5677312';
 		
 		try
 		{
@@ -313,7 +313,7 @@ searchBlock.findEvent
 								{
 									src: element.Poster!='N/A'?element.Poster:'image/not_found.jpg',
 									text: element.Title + ' ' + (element.Year!='N/A'?`(${element.Year} год)`:''),
-									id: element.imdbID
+									id: element.imdbID.trim()
 								}
 							);
 						}
