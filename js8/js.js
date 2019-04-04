@@ -28,6 +28,11 @@ let storageAPI =
 {
 	addInStorage:(item) =>
 	{
+		if(!window.localStorage.choses)
+		{
+			window.localStorage.choses = '[]';
+		}
+
 		let json = JSON.parse(window.localStorage.choses);
 
 		json[Object.keys(json).length] = item;
@@ -55,6 +60,11 @@ let storageAPI =
 	},
 	removeInStorage:(id) =>
 	{
+		if(!window.localStorage.choses)
+		{
+			window.localStorage.choses = '[]';
+		}
+
 		let json = JSON.parse(window.localStorage.choses);
 
 		let newJson = [];
