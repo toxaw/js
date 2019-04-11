@@ -1,3 +1,12 @@
+let filmsVue = new Vue(
+{
+  el: 'main',
+  data: 
+  	{
+  		films: []
+	}
+});
+
 let searchBlock = 
 {
 	findEvent : (callback) =>
@@ -89,44 +98,11 @@ let contentBlock =
 {
 	setContent:(contentList) =>
 	{
-		let contentField = document.getElementsByTagName('main')[0];
-
-		contentList.forEach
-		(
-			function(element) 
-			{
-				imageElement = document.createElement('img');
-
-				imageElement.src = element.src;
-
-				headerElement = document.createElement('p');
-
-				headerElement.innerText = element.text;
-
-  				divElement = document.createElement('div');
-
-  				divElement.className = 'film-element';
-
-  				divElement.appendChild(headerElement);
-
-  				divElement.appendChild(imageElement);
-
-  				contentField.appendChild(divElement);
-			}
-		);
+		filmsVue.films = contentList;	      	
 	},
 	removeContent:() =>
 	{
-		let contentField = document.getElementsByTagName('main')[0];
-		
-		Array.from(contentField.getElementsByClassName('film-element')).forEach 
-		(
-			(element) =>
-			{
-				contentField.removeChild(element);				
-			}
-		);
-
+		filmsVue.films = [];
 	}
 };
 
@@ -146,6 +122,8 @@ let api =
 		}
 		catch(e)
 		{
+			//console.log(e);
+
 			callback(null, 'Ошибка сервера');
 		}
 	}
