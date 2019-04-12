@@ -1,0 +1,16 @@
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
+    <link rel="stylesheet" href="font-awesome-4.7\css\font-awesome.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <title>Я ищу..</title>
+</head>
+<body>
+	<header>		
+		<search-container></search-container>
+	</header>
+	<main>
+		<content-container v-for="film in films" :film ="film"></content-container>	
+	</main>
+<body>
+<script src="js.js"></script>
